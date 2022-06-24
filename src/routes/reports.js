@@ -34,7 +34,7 @@ router.post('/', Security.checkJWT,async (req, res) => {
     if (!report.validate())
         return res.sendStatus(400)
 
-    console.log(`[${req.aud}:${req.cid}]New report: ${JSON.stringify(report)}`)
+    console.log(`[${req.aud}:${req.cid}] New report: ${JSON.stringify(report)}`)
     db.query(
         'INSERT INTO reports (datacenter_id, world_id, territory_id, date) VALUES ($1, $2, $3, $4)',
         [report.datacenter_id, report.world_id, report.territory_id, new Date(report.date)])

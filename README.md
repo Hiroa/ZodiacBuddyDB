@@ -4,7 +4,7 @@ ZodiacBuddyDB is an app to communicate with the [ZodiacBuddy](https://github.com
 
 ## Api
 
-[Swagger Docs](https://zodiac-buddy.fly.dev/api-docs.)
+[Swagger Docs](https://zodiac-buddy-db.fly.dev/api-docs/)
 
 ### Endpoints
 
@@ -23,9 +23,9 @@ Take a report on body and save it.
 
 ```json
 {
-  "datacenter_id": "6",
-  "world_id": "39",
-  "territory_id": "172",
+  "datacenter_id": 6,
+  "world_id": 39,
+  "territory_id": 172,
   "date": "2022-06-24T01:19:53Z"
 }
 ```
