@@ -1,0 +1,113 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "1.0.0",
+    "title": "ZodiacBuddyDB",
+    "description": "Server for the ZodiacBuddy plugin",
+    "contact": {
+      "name": "Hiroa",
+      "url": "https://github.com/Hiroa/ZodiacBuddyDB"
+    }
+  },
+  "paths": {
+    "/reports/last/{datacenter_id}": {
+      "get": {
+        "description": "Retrieve the last report of a datacenter",
+        "parameters": [
+          {
+            "schema": {
+              "title": "Datacenter ID",
+              "type": "integer"
+            },
+            "name": "datacenter_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Report"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "No report found for the datacenter"
+          }
+        }
+      }
+    },
+    "/reports": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Report"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Report": {
+        "type": "object",
+        "title": "Report",
+        "properties": {
+          "datacenter_id": {
+            "type": "integer"
+          },
+          "world_id": {
+            "type": "integer"
+          },
+          "territory_id": {
+            "type": "integer"
+          },
+          "date": {
+            "type": "string",
+            "format": "ISO8601"
+          }
+        },
+        "required": [
+          "datacenter_id",
+          "world_id",
+          "territory_id",
+          "date"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "name": "x-access-token",
+        "description": "JWT. Either 'x-access-token' or 'authorisation'. May or not start with 'Bearer '.",
+        "in": "header"
+      }
+    }
+  }
+}
