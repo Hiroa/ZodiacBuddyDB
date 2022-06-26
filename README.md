@@ -10,7 +10,7 @@ ZodiacBuddyDB is an app to communicate with the [ZodiacBuddy](https://github.com
 
 #### GET /reports/last/{{datacenter_id}}
 
-Gets the last report for the specified datacenter.
+Gets the last report since last duty switch for the specified datacenter.
 
 #### POST /reports
 

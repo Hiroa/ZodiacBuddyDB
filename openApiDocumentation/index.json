@@ -12,7 +12,7 @@
   "paths": {
     "/reports/last/{datacenter_id}": {
       "get": {
-        "description": "Retrieve the last report of a datacenter",
+        "description": "Retrieve the last report of a datacenter since last duty switch",
         "parameters": [
           {
             "schema": {

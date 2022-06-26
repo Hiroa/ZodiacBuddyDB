@@ -17,8 +17,8 @@ router.get('/last/:datacenter', async (req, res) => {
 
     console.debug("Get last report for datacenter -> " + datacenter)
     const {rows} = await db.query(
-        'SELECT r.datacenter_id, r.world_id, r.territory_id, r.date FROM reports r WHERE r.datacenter_id = $1 ORDER BY r.date DESC LIMIT 1',
-        [datacenter]
+        'SELECT r.datacenter_id, r.world_id, r.territory_id, r.date FROM reports r WHERE r.datacenter_id = $1 AND r.date > $2 ORDER BY r.date DESC LIMIT 1',
+        [datacenter, getLastResetDate()]
     )
 
     if (rows.length > 0) {
@@ -40,3 +40,17 @@ router.post('/', Security.checkJWT,async (req, res) => {
         [report.datacenter_id, report.world_id, report.territory_id, new Date(report.date)])
     res.sendStatus(204)
 })
+
+function getLastResetDate() {
+    let date = new Date()
+    console.log(date)
+    let lastEvenHour = date.getHours()%2 === 0 ?
+        date.getHours() - 2 :
+        date.getHours() - 1
+    date.setHours(lastEvenHour)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+    console.log(date)
+    return date
+}
