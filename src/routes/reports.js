@@ -37,13 +37,12 @@ router.post('/', Security.checkJWT,async (req, res) => {
     console.log(`[${req.aud}:${req.cid}] New report: ${JSON.stringify(report)}`)
     db.query(
         'INSERT INTO reports (datacenter_id, world_id, territory_id, date) VALUES ($1, $2, $3, $4)',
-        [report.datacenter_id, report.world_id, report.territory_id, new Date(report.date)])
+        [report.datacenter_id, report.world_id, report.territory_id, report.date])
     res.sendStatus(204)
 })
 
 function getLastResetDate() {
     let date = new Date()
-    console.log(date)
     let lastEvenHour = date.getHours()%2 === 0 ?
         date.getHours() - 2 :
         date.getHours() - 1
@@ -51,6 +50,5 @@ function getLastResetDate() {
     date.setMinutes(0)
     date.setSeconds(0)
     date.setMilliseconds(0)
-    console.log(date)
     return date
 }
