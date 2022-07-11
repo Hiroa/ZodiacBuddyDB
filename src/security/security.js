@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const options = {
-    algorithms: ['HS512'],
+    algorithms: ['HS256'],
     maxAge: '1m',
     issuer: 'ZodiacBuddyDB',
     audience: ['ZodiacBuddy']
