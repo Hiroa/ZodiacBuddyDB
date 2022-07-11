@@ -9,13 +9,13 @@ module.exports = router
 
 router.get('/last/:datacenter', async (req, res) => {
     const {datacenter} = req.params;
+    const ip = req.header('Fly-Client-IP')
 
     if (!datacenter || Number(datacenter) <= 0) {
-        console.warn("Bad datacenter -> " + datacenter)
+        console.warn(`[${ip}] Bad datacenter -> ${datacenter}`)
         return res.sendStatus(400)
     }
 
-    console.debug("Get last report for datacenter -> " + datacenter)
     const {rows} = await db.query(
         'SELECT r.datacenter_id, r.world_id, r.territory_id, r.date FROM reports r WHERE r.datacenter_id = $1 AND r.date > $2 ORDER BY r.date DESC LIMIT 1',
         [datacenter, getLastResetDate()]
@@ -30,8 +30,9 @@ router.get('/last/:datacenter', async (req, res) => {
 
 router.post('/', Security.checkJWT,async (req, res) => {
     let report = Report.from(req.body)
+    const ip = req.header('Fly-Client-IP')
 
-    if (!report.validate())
+    if (!report.validate(ip))
         return res.sendStatus(400)
 
     console.log(`[${req.aud}:${req.cid}] New report: ${JSON.stringify(report)}`)
