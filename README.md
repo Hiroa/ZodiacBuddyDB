@@ -34,7 +34,7 @@ Take a report on body and save it.
 
 #### [JWT](https://jwt.io/)
 
-Using HS512 for signature with the payload: 
+Using HS256 for signature with the payload: 
 ```json
 {
   "sub": "UserIdentifier",

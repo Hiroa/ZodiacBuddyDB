@@ -28,7 +28,7 @@ router.get('/last/:datacenter', async (req, res) => {
     }
 })
 
-router.post('/', Security.checkJWT,async (req, res) => {
+router.post('/', Security.checkJWT, async (req, res) => {
     let report = Report.from(req.body)
     const ip = req.header('Fly-Client-IP')
 
@@ -44,8 +44,8 @@ router.post('/', Security.checkJWT,async (req, res) => {
 
 function getLastResetDate() {
     let date = new Date()
-    let lastEvenHour = date.getHours()%2 === 0 ?
-        date.getHours() - 2 :
+    let lastEvenHour = date.getHours() % 2 === 0 ?
+        date.getHours() :
         date.getHours() - 1
     date.setHours(lastEvenHour)
     date.setMinutes(0)
