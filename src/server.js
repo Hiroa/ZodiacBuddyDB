@@ -17,9 +17,5 @@ app.get('/', (req, res) => {
     res.json({versions: pjson.version, sha: sha});
 });
 
-app.get("*", (req, res) => {
-    res.sendStatus(404);
-});
-
 app.listen(port, () => console.log(`ZodiacBuddyDB app V${pjson.version}.${sha} listening on port ${port}!`))
 

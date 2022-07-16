@@ -8,9 +8,13 @@ ZodiacBuddyDB is an app to communicate with the [ZodiacBuddy](https://github.com
 
 ### Endpoints
 
-#### GET /reports/last/{{datacenter_id}}
+#### ~~GET /reports/last/{{datacenter_id}}~~ [Deprecated] use /reports/active instead
 
 Gets the last report since last duty switch for the specified datacenter.
+
+#### GET /reports/active
+
+Gets the list of active reports since last reset.
 
 #### POST /reports
 

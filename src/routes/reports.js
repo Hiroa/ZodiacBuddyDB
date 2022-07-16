@@ -18,11 +18,31 @@ router.get('/last/:datacenter', async (req, res) => {
 
     const {rows} = await db.query(
         'SELECT r.datacenter_id, r.world_id, r.territory_id, r.date FROM reports r WHERE r.datacenter_id = $1 AND r.date > $2 ORDER BY r.date DESC LIMIT 1',
-        [datacenter, getLastResetDate()]
+        [datacenter, getActiveResetDate()]
     )
 
     if (rows.length > 0) {
         res.json(rows[0])
+    } else {
+        res.sendStatus(404)
+    }
+})
+
+router.get('/active', async (req, res) => {
+
+    const activeBonus = (await getActiveBonus()).rows
+
+    let result = [];
+    let territory = [];
+    activeBonus.forEach((r) => {
+        if (!territory.includes(r.territory_id)) {
+            territory.push(r.territory_id)
+            result.push(r)
+        }
+    })
+
+    if (result.length > 0) {
+        res.json(result)
     } else {
         res.sendStatus(404)
     }
@@ -35,19 +55,55 @@ router.post('/', Security.checkJWT, async (req, res) => {
     if (!report.validate(ip))
         return res.sendStatus(400)
 
+    //Check if not present in the current and previous window
+    //For future usage
+    // const count = (await isAlreadyRegistered(report.territory_id)).rows
+    // if (count[0].count >= 1) {
+    //     return res.sendStatus(204)
+    // }
+
     console.log(`[${req.aud}:${req.cid}] New report: ${JSON.stringify(report)}`)
-    db.query(
-        'INSERT INTO reports (datacenter_id, world_id, territory_id, date) VALUES ($1, $2, $3, $4)',
-        [report.datacenter_id, report.world_id, report.territory_id, report.date])
+    insertReport(report)
     res.sendStatus(204)
 })
 
-function getLastResetDate() {
+function insertReport(report) {
+    db.query('INSERT INTO reports (datacenter_id, world_id, territory_id, date) VALUES ($1, $2, $3, $4)',
+        [report.datacenter_id, report.world_id, report.territory_id, report.date])
+}
+
+async function isAlreadyRegistered(territory_id) {
+    return await db.query(
+        'SELECT DISTINCT count(r.territory_id) FROM reports r WHERE r.date > $1 AND r.territory_id = $2',
+        [getPreviousResetDate(), territory_id]
+    )
+}
+
+async function getActiveBonus() {
+    return await db.query(
+        'SELECT r.datacenter_id, r.world_id, r.territory_id, r.date FROM reports r WHERE r.date > $1 ORDER BY r.date DESC',
+        [getActiveResetDate()]
+    )
+}
+
+function getPreviousResetDate() {
     let date = new Date()
-    let lastEvenHour = date.getHours() % 2 === 0 ?
+    let previousEvenHour = date.getHours() % 2 === 0 ?
+        date.getHours() - 2:
+        date.getHours() - 3
+    date.setHours(previousEvenHour)
+    date.setMinutes(0)
+    date.setSeconds(0)
+    date.setMilliseconds(0)
+    return date
+}
+
+function getActiveResetDate() {
+    let date = new Date()
+    let activeEvenHour = date.getHours() % 2 === 0 ?
         date.getHours() :
         date.getHours() - 1
-    date.setHours(lastEvenHour)
+    date.setHours(activeEvenHour)
     date.setMinutes(0)
     date.setSeconds(0)
     date.setMilliseconds(0)
