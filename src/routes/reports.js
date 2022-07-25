@@ -13,12 +13,11 @@ router.get('/last/:datacenter', async (req, res) => {
 
     if (!datacenter || Number(datacenter) <= 0) {
         console.warn(`[${ip}] Bad datacenter -> ${datacenter}`)
-        return res.sendStatus(400)
     }
 
     const {rows} = await db.query(
-        'SELECT r.datacenter_id, r.world_id, r.territory_id, r.date FROM reports r WHERE r.datacenter_id = $1 AND r.date > $2 ORDER BY r.date DESC LIMIT 1',
-        [datacenter, getActiveResetDate()]
+        'SELECT r.datacenter_id, r.world_id, r.territory_id, r.date FROM reports r WHERE r.date > $1 ORDER BY r.date DESC LIMIT 1',
+        [getActiveResetDate()]
     )
 
     if (rows.length > 0) {
@@ -44,7 +43,7 @@ router.get('/active', async (req, res) => {
     if (result.length > 0) {
         res.json(result)
     } else {
-        res.sendStatus(404)
+        res.sendStatus(204)
     }
 })
 
@@ -55,12 +54,11 @@ router.post('/', Security.checkJWT, async (req, res) => {
     if (!report.validate(ip))
         return res.sendStatus(400)
 
-    //Check if not present in the current and previous window
-    //For future usage
-    // const count = (await isAlreadyRegistered(report.territory_id)).rows
-    // if (count[0].count >= 1) {
-    //     return res.sendStatus(204)
-    // }
+    //Check if not present in the active and previous window
+    const count = (await isAlreadyRegistered(report.territory_id)).rows
+    if (count[0].count >= 1) {
+        return res.sendStatus(204)
+    }
 
     console.log(`[${req.aud}:${req.cid}] New report: ${JSON.stringify(report)}`)
     insertReport(report)
