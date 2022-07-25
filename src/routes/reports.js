@@ -40,11 +40,7 @@ router.get('/active', async (req, res) => {
         }
     })
 
-    if (result.length > 0) {
-        res.json(result)
-    } else {
-        res.sendStatus(204)
-    }
+    res.json(result)
 })
 
 router.post('/', Security.checkJWT, async (req, res) => {
