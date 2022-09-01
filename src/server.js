@@ -3,6 +3,7 @@ const reports = require('./routes/reports');
 const swaggerUi = require('swagger-ui-express')
 const openApiDocumentation = require('../openApiDocumentation');
 const pjson = require('../package.json');
+const cron = require('./cron');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -17,5 +18,6 @@ app.get('/', (req, res) => {
     res.json({versions: pjson.version, sha: sha});
 });
 
+cron.init()
 app.listen(port, () => console.log(`ZodiacBuddyDB app V${pjson.version}.${sha} listening on port ${port}!`))
 
