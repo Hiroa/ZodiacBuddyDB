@@ -7,26 +7,6 @@ const router = new Router()
 
 module.exports = router
 
-router.get('/last/:datacenter', async (req, res) => {
-    const {datacenter} = req.params;
-    const ip = req.header('Fly-Client-IP')
-
-    if (!datacenter || Number(datacenter) <= 0) {
-        console.warn(`[${ip}] Bad datacenter -> ${datacenter}`)
-    }
-
-    const {rows} = await db.query(
-        'SELECT r.datacenter_id, r.world_id, r.territory_id, r.date FROM reports r WHERE r.date > $1 ORDER BY r.date DESC LIMIT 1',
-        [getActiveResetDate()]
-    )
-
-    if (rows.length > 0) {
-        res.json(rows[0])
-    } else {
-        res.sendStatus(404)
-    }
-})
-
 router.get('/active', async (req, res) => {
 
     const activeBonus = (await getActiveBonus()).rows

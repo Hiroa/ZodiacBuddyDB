@@ -10,40 +10,6 @@
     }
   },
   "paths": {
-    "/reports/last/{datacenter_id}": {
-      "get": {
-        "description": "Retrieve the last report of a datacenter since last duty switch",
-        "parameters": [
-          {
-            "schema": {
-              "title": "Datacenter ID",
-              "type": "integer"
-            },
-            "name": "datacenter_id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Report"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "No report found for the datacenter"
-          }
-        }
-      }
-    },
     "/reports/active": {
       "get": {
         "description": "Gets the list of active reports since last reset.",
