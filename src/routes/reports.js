@@ -30,6 +30,11 @@ router.post('/', Security.checkJWT, async (req, res) => {
     if (!report.validate(ip))
         return res.sendStatus(400)
 
+    //Check if not already reset
+    if (new Date(report.date) < getActiveResetDate()) {
+        return res.sendStatus(204)
+    }
+
     //Check if not present in the active and previous window
     const count = (await isAlreadyRegistered(report.territory_id)).rows
     if (count[0].count >= 1) {
@@ -49,7 +54,7 @@ function insertReport(report) {
 async function isAlreadyRegistered(territory_id) {
     return await db.query(
         'SELECT DISTINCT count(r.territory_id) FROM reports r WHERE r.date > $1 AND r.territory_id = $2',
-        [getPreviousResetDate(), territory_id]
+        [getActiveResetDate(), territory_id]
     )
 }
 
@@ -58,18 +63,6 @@ async function getActiveBonus() {
         'SELECT r.datacenter_id, r.world_id, r.territory_id, r.date FROM reports r WHERE r.date > $1 ORDER BY r.date DESC',
         [getActiveResetDate()]
     )
-}
-
-function getPreviousResetDate() {
-    let date = new Date()
-    let previousEvenHour = date.getHours() % 2 === 0 ?
-        date.getHours() - 2:
-        date.getHours() - 3
-    date.setHours(previousEvenHour)
-    date.setMinutes(0)
-    date.setSeconds(0)
-    date.setMilliseconds(0)
-    return date
 }
 
 function getActiveResetDate() {
