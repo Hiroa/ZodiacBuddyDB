@@ -40,10 +40,12 @@ Using HS256 for signature with the payload:
   "sub": "UserIdentifier",
   "iss": "ZodiacBuddyDB",
   "aud": "YourAppName",
-  "iat": 1516239022
+  "iat": 1516239022,
+  "version": 1
 }
 ```
 `iss` claim should always be `ZodiacBuddyDB`.  
 `sub` claim is used to identify your user and `aud` your service.  
 `iat` claim should not be more than one minute.  
+`version` claim is used to identify the version of the request.  
 The JWT can be sent in header `authorisation` or `x-access-token` as bearer token or directly 

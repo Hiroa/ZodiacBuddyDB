@@ -8,7 +8,7 @@ const options = {
     audience: ['ZodiacBuddy']
 }
 
-const minVersion = 2
+const minVersion = 3
 
 exports.checkJWT = async (req, res, next) => {
     let token = req.headers['x-access-token'] || req.headers['authorization'];
