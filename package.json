@@ -14,7 +14,7 @@
   "homepage": "https://github.com/Hiroa/ZodiacBuddyDB#readme",
   "dependencies": {
     "cron": "4.3.3",
-    "express": "5.1.0",
+    "express": "^4.21.2",
     "express-promise-router": "^4.1.1",
     "jsonwebtoken": "^9.0.2",
     "pg": "8.16.3",
