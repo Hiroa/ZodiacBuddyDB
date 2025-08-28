@@ -41,7 +41,7 @@ Using HS256 for signature with the payload:
   "iss": "ZodiacBuddyDB",
   "aud": "YourAppName",
   "iat": 1516239022,
-  "version": 1
+  "version": 3
 }
 ```
 `iss` claim should always be `ZodiacBuddyDB`.  
