@@ -8,24 +8,24 @@ module.exports = class Report {
         return Object.assign(new Report(), obj);
     }
 
-    validate(ip) {
+    validate() {
         if (!this.datacenter_id || !Number(this.datacenter_id) || this.datacenter_id <= 0) {
-            console.warn(`[${ip}] Bad datacenter_id -> ${this}`)
+            console.warn(`Bad datacenter_id -> ${this}`)
             return false;
         }
 
         if (!this.world_id || !Number(this.world_id) || this.world_id <= 0) {
-            console.warn(`[${ip}] Bad world_id -> ${this}`)
+            console.warn(`Bad world_id -> ${this}`)
             return false;
         }
 
         if (!this.territory_id || !Number(this.territory_id) || this.territory_id <= 0) {
-            console.warn(`[${ip}] Bad territory_id -> ${this}`);
+            console.warn(`Bad territory_id -> ${this}`);
             return false;
         }
 
         if (!this.date || new Date(this.date).toString() === "Invalid date") {
-            console.warn(`[${ip}] Bad date -> ${this}`)
+            console.warn(`Bad date -> ${this}`)
             return false;
         }
         return true;

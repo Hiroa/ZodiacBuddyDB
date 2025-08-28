@@ -25,9 +25,8 @@ router.get('/active', async (req, res) => {
 
 router.post('/', Security.checkJWT, async (req, res) => {
     let report = Report.from(req.body)
-    const ip = req.header('Fly-Client-IP')
 
-    if (!report.validate(ip))
+    if (!report.validate())
         return res.sendStatus(400)
 
     //Check if not already reset
